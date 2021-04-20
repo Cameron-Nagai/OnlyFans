@@ -61,12 +61,7 @@ void loop() {
     for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
       pwm.setPWM(pwmnum, 4096, 0);
     }
-    delay(5000);
-    for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
-      pwm.setPWM(pwmnum, 0, 4096);
-    }
-    delay(1000);
-    
+
 #ifdef ESP8266
     yield();  // take a breather, required for ESP8266
 #endif
