@@ -25,12 +25,6 @@
 #define OSCILLATORFREQUENCY 27000000
 #define PWMFREQ 1600
 
-
-// called this way, it uses the default address 0x40
-// Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
-// you can also call it with a different address you want
-//Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x41);
-// you can also call it with a different address and I2C interface
 Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40, Wire);
 Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41, Wire);
 Adafruit_PWMServoDriver pwm3 = Adafruit_PWMServoDriver(0x42, Wire);
