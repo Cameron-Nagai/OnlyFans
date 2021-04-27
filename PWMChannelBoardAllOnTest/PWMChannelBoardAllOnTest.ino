@@ -19,6 +19,10 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
+#define BOARDNUMBER 1 //This sets what board number will be all on
+
+uint8_t boardNum = BOARDNUMBER - 1;
+
 Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40, Wire);
 Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41, Wire);
 Adafruit_PWMServoDriver pwm3 = Adafruit_PWMServoDriver(0x42, Wire);
@@ -77,11 +81,10 @@ void setup() {
 }
 
 void loop() {
-  for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
     for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
        pwmArray[boardNum].setPWM(pwmnum, 4096, 0);
     }
-}
+
 
 
 #ifdef ESP8266

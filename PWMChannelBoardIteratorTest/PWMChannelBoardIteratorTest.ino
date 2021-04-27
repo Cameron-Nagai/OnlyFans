@@ -19,6 +19,15 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
+#define FANOFF 1 //This decides if the fans stay on or turn off after each iteration 1=yes 0=no
+#define DELAYSPEED 2000 //This sets the speed between each fan on/off
+#define BOARDNUMBER 1 //This sets what board number will be iterated
+
+#define OSCILLATORFREQUENCY 27000000
+#define PWMFREQ 1600
+
+uint8_t boardNum = BOARDNUMBER - 1;
+
 Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40, Wire);
 Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41, Wire);
 Adafruit_PWMServoDriver pwm3 = Adafruit_PWMServoDriver(0x42, Wire);
@@ -33,22 +42,22 @@ Adafruit_PWMServoDriver pwm11 = Adafruit_PWMServoDriver(0x50, Wire);
 Adafruit_PWMServoDriver pwm12 = Adafruit_PWMServoDriver(0x51, Wire);
 Adafruit_PWMServoDriver pwm13 = Adafruit_PWMServoDriver(0x52, Wire);
 
-Adafruit_PWMServoDriver pwmArray[13] = {pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, 
-  pwm7, pwm8, pwm9, pwm10, pwm11, pwm12, pwm13};
+Adafruit_PWMServoDriver pwmArray[13] = {pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, pwm7, pwm8, pwm9, pwm10, pwm11, pwm12, pwm13};
 
-
-
-
-
-
-#define SPEED 900
+bool allFansOff = false;
+void allOff() {
+  for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
+    for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
+       pwmArray[boardNum].setPWM(pwmnum, 0, 4096);
+       Serial.println("All PWM Channels Off");
+    }
+  }
+}
 
 void setup() {
   Serial.begin(9600);
   Serial.println("16 channel PWM test!");
 
-  pwm1.begin();
-  Serial.println("PWM STARTED");
   for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
       pwmArray[boardNum].begin();
       pwmArray[boardNum].setOscillatorFrequency(27000000);
@@ -70,18 +79,44 @@ void setup() {
    * affects the calculations for the PWM update frequency. 
    * Failure to correctly set the int.osc value will cause unexpected PWM results
    */
+
+
   // if you want to really speed stuff up, you can go into 'fast 400khz I2C' mode
   // some i2c devices dont like this so much so if you're sharing the bus, watch
   // out for this!
   Wire.setClock(400000);
+
 }
 
 void loop() {
-  for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
-    for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
-       pwmArray[boardNum].setPWM(pwmnum, 4096, 0);
+  if (!allFansOff) {
+    allOff;
+    allFansOff = true;
+  }
+  // Drive each PWM in a 'wave'
+
+
+    for (uint8_t pwmNum=0; pwmNum < 16; pwmNum++) {
+       pwmArray[boardNum].setPWM(pwmNum, 4096, 0);
+       Serial.print("Board ");
+       Serial.print(boardNum+1);
+       Serial.print(" PWM Channel #");
+       Serial.println(pwmNum+1);
+       delay(DELAYSPEED);
+       if (FANOFF) {
+       pwmArray[boardNum].setPWM(pwmNum, 0, 4096);
+       
     }
 }
+
+
+
+  
+    // for (uint8_t pwmnum=0; pwmnum < 4; pwmnum++) {
+    //   pwm1.setPWM(pwmnum, 4096, 0);
+    //   delay(2000);
+    //   pwm1.setPWM(pwmnum, 0, 4096);
+    // }
 
 
 #ifdef ESP8266
