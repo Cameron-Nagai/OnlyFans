@@ -21,7 +21,7 @@
 
 #define FANOFF 1 //1 is yes fans turn off after iterations 0 is they stay on
 #define DELAYSPEED 1000
-#define DEBUG 0 //Turns print statements on/off, 1 is on 0 is off
+#define DEBUG 1 //Turns print statements on and off 1 is on 0 is off
 
 #define OSCILLATORFREQUENCY 27000000
 #define PWMFREQ 1600
@@ -96,7 +96,7 @@ void loop() {
 
 for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
   if (boardNum !=12) {
-  for (uint8_t pwmnum=0; pwmnum < 8; pwmnum++) {
+  for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
        pwmArray[boardNum].setPWM(pwmnum, 4096, 0);
        if (DEBUG) {
        Serial.print("Board ");
@@ -105,28 +105,10 @@ for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
        Serial.println(pwmnum+1);
        }
     }
-      if (FANOFF) {
-        for (uint8_t pwmnum =0; pwmnum < 8; pwmnum++) {
-        pwmArray[boardNum].setPWM(pwmnum, 0, 4096);
-      }
-    }
-
-        delay(DELAYSPEED);
-        for (uint8_t pwmnum=8; pwmnum < 16; pwmnum++) {
-          pwmArray[boardNum].setPWM(pwmnum, 4096, 0);
-          if (DEBUG) {
-          Serial.print("Board ");
-          Serial.print(boardNum+1);
-          Serial.print(" PWM Channel #");
-          Serial.println(pwmnum+1);
-       }
-    }
-    if (FANOFF) {
-        for (uint8_t pwmnum =8; pwmnum < 16; pwmnum++) {
-        pwmArray[boardNum].setPWM(pwmnum, 0, 4096);
-      }
-    }
     delay(DELAYSPEED);
+    for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++) {
+       pwmArray[boardNum].setPWM(pwmnum, 0, 4096);
+      }     
     }
   
   else {
@@ -142,6 +124,12 @@ for (uint8_t boardNum=0; boardNum < 13; boardNum++) {
   }
 }
 
+  
+    // for (uint8_t pwmnum=0; pwmnum < 4; pwmnum++) {
+    //   pwm1.setPWM(pwmnum, 4096, 0);
+    //   delay(2000);
+    //   pwm1.setPWM(pwmnum, 0, 4096);
+    // }
 
 
 #ifdef ESP8266 
