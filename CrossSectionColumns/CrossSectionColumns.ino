@@ -21,7 +21,7 @@
 
 #define FANOFF 1 //1 is yes fans turn off after iterations 0 is they stay on
 #define DELAYSPEED 1000
-#define DEBUG 0 //Turns print statements on/off, 1 is on 0 is off
+#define DEBUG 1 //Turns print statements on/off, 1 is on 0 is off
 
 #define OSCILLATORFREQUENCY 27000000
 #define PWMFREQ 1600
